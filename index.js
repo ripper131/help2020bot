@@ -266,7 +266,7 @@ app.listen(PORT, async () => {
     console.log(`سرور در حال اجرا روی پورت ${PORT}`);
     try {
         await axios.post(`${apiUrl}/setWebhook`, {
-            url: 'https://53e3-45-8-17-191.ngrok-free.app/webhook', // آدرس ngrok خود را وارد کنید
+            url: 'https://blog2020.onrender.com/webhook', // آدرس ngrok خود را وارد کنید
         });
         console.log('وب‌هوک تنظیم شد.');
     } catch (error) {
