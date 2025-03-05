@@ -266,7 +266,7 @@ app.listen(PORT, async () => {
     console.log(`سرور در حال اجرا روی پورت ${PORT}`);
     try {
         await axios.post(`${apiUrl}/setWebhook`, {
-            url: 'https://67c7ff4a7a1abf04f701c6ca--grand-paprenjak-4125b8.netlify.app/webhook', // آدرس ngrok خود را وارد کنید
+            url: 'https://help2020bot.netlify.app/webhook', // آدرس ngrok خود را وارد کنید
         });
         console.log('وب‌هوک تنظیم شد.');
     } catch (error) {
