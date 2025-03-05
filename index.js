@@ -184,7 +184,7 @@ app.post("/webhook", async (req, res) => {
 
         // مدیریت کلیک روی دکمه "مانده اعتبار"
         if (data === "check_balance") {
-            const message = "برای بررسی مانده اعتبار، لطفاً کد USSD زیر را اجرا کنید:\n\n*2020#";
+            const message = "برای بررسی مانده اعتبار، لطفاً کد USSD زیر را اجرا کنید:\n\n*2020*2*3#";
             const replyMarkup = {
                 inline_keyboard: [
                     [
