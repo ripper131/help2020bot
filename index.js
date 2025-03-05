@@ -131,6 +131,7 @@ async function sendMessage(chatId, text, replyMarkup = null) {
 
 // دستور /start
 // دستور /start
+// دستور /start
 app.post("/webhook", async (req, res) => {
     const update = req.body;
 
@@ -156,7 +157,11 @@ app.post("/webhook", async (req, res) => {
                     [
                         {
                             text: "مانده اعتبار",
-                            callback_data: "check_balance", // دکمه جدید
+                            callback_data: "check_balance", // دکمه قبلی
+                        },
+                        {
+                            text: "خرید ترافیک",
+                            callback_data: "buy_traffic", // دکمه جدید
                         },
                     ],
                 ],
@@ -180,7 +185,35 @@ app.post("/webhook", async (req, res) => {
         // مدیریت کلیک روی دکمه "مانده اعتبار"
         if (data === "check_balance") {
             const message = "برای بررسی مانده اعتبار، لطفاً کد USSD زیر را اجرا کنید:\n\n*2020#";
-            await sendMessage(chatId, message);
+            const replyMarkup = {
+                inline_keyboard: [
+                    [
+                        {
+                            text: "بازگشت به منوی اصلی",
+                            callback_data: "start", // بازگشت به منوی اصلی
+                        },
+                    ],
+                ],
+            };
+            await sendMessage(chatId, message, replyMarkup);
+            res.sendStatus(200);
+            return;
+        }
+
+        // مدیریت کلیک روی دکمه "خرید ترافیک"
+        if (data === "buy_traffic") {
+            const message = "برای خرید ترافیک، لطفاً کد USSD زیر را اجرا کنید:\n\n*2020*2*1#";
+            const replyMarkup = {
+                inline_keyboard: [
+                    [
+                        {
+                            text: "بازگشت به منوی اصلی",
+                            callback_data: "start", // بازگشت به منوی اصلی
+                        },
+                    ],
+                ],
+            };
+            await sendMessage(chatId, message, replyMarkup);
             res.sendStatus(200);
             return;
         }
@@ -240,7 +273,11 @@ app.post("/webhook", async (req, res) => {
                 [
                     {
                         text: "مانده اعتبار",
-                        callback_data: "check_balance", // دکمه جدید
+                        callback_data: "check_balance", // دکمه قبلی
+                    },
+                    {
+                        text: "خرید ترافیک",
+                        callback_data: "buy_traffic", // دکمه جدید
                     },
                 ],
             ],
