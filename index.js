@@ -266,7 +266,7 @@ app.listen(PORT, async () => {
     console.log(`سرور در حال اجرا روی پورت ${PORT}`);
     try {
         await axios.post(`${apiUrl}/setWebhook`, {
-            url: 'https://5ffa6746-e306-4792-9039-2ddb73b19ab2-00-18vaa8sfszrax.spock.replit.dev/webhook', // آدرس ngrok خود را وارد کنید
+            url: 'https://53e3-45-8-17-191.ngrok-free.app/webhook', // آدرس ngrok خود را وارد کنید
         });
         console.log('وب‌هوک تنظیم شد.');
     } catch (error) {
