@@ -130,7 +130,8 @@ async function sendMessage(chatId, text, replyMarkup = null) {
 }
 
 // دستور /start
-app.post('/webhook', async (req, res) => {
+// دستور /start
+app.post("/webhook", async (req, res) => {
     const update = req.body;
 
     // بررسی وجود callback_query
@@ -140,34 +141,46 @@ app.post('/webhook', async (req, res) => {
         const data = callbackQuery.data;
 
         // اگر callback_data برابر با "start" باشد، دستور /start اجرا می‌شود
-        if (data === 'start') {
-            let tutorialList = 'به مرکز آموزش مجازی مخابرات ایران خوش آمدید \n\n لیست آموزش ها: \n\n';
-            // tutorials.forEach((tutorial, index) => {
-            //     tutorialList += `${index + 1}. ${tutorial.title}\n`;
-            // });
-            // tutorialList += '\nبرای دریافت آموزش، عدد مربوطه را ارسال کنید.';
+        if (data === "start") {
+            let tutorialList = "به مرکز آموزش مجازی مخابرات ایران خوش آمدید \n\n لیست آموزش ها: \n\n";
 
             // ایجاد دکمه‌های شیشه‌ای
             const replyMarkup = {
-                inline_keyboard: tutorials.map((tutorial, index) => [
-                    {
-                        text: tutorial.title,
-                        callback_data: (index + 1).toString()
-                    }
-                ])
+                inline_keyboard: [
+                    ...tutorials.map((tutorial, index) => [
+                        {
+                            text: tutorial.title,
+                            callback_data: (index + 1).toString(),
+                        },
+                    ]),
+                    [
+                        {
+                            text: "مانده اعتبار",
+                            callback_data: "check_balance", // دکمه جدید
+                        },
+                    ],
+                ],
             };
 
             await sendMessage(chatId, tutorialList, replyMarkup);
 
             // تایید دریافت callback_query
             try {
-                await axios.post(`${apiUrl}/answerCallbackQuery`, { 
-                    callback_query_id: callbackQuery.id 
+                await axios.post(`${apiUrl}/answerCallbackQuery`, {
+                    callback_query_id: callbackQuery.id,
                 });
             } catch (error) {
-                console.error('خطا در تایید callback_query:', error.response?.data);
+                console.error("خطا در تایید callback_query:", error.response?.data);
             }
 
+            res.sendStatus(200);
+            return;
+        }
+
+        // مدیریت کلیک روی دکمه "مانده اعتبار"
+        if (data === "check_balance") {
+            const message = "برای بررسی مانده اعتبار، لطفاً کد USSD زیر را اجرا کنید:\n\n*2020#";
+            await sendMessage(chatId, message);
             res.sendStatus(200);
             return;
         }
@@ -183,24 +196,24 @@ app.post('/webhook', async (req, res) => {
                     inline_keyboard: [
                         [
                             {
-                                text: 'بازگشت به منوی اصلی',
-                                callback_data: 'start'
-                            }
-                        ]
-                    ]
+                                text: "بازگشت به منوی اصلی",
+                                callback_data: "start",
+                            },
+                        ],
+                    ],
                 };
                 await sendMessage(chatId, tutorial.content, replyMarkup);
 
                 // تایید دریافت callback_query
                 try {
-                    await axios.post(`${apiUrl}/answerCallbackQuery`, { 
-                        callback_query_id: callbackQuery.id 
+                    await axios.post(`${apiUrl}/answerCallbackQuery`, {
+                        callback_query_id: callbackQuery.id,
                     });
                 } catch (error) {
-                    console.error('خطا در تایید callback_query:', error.response?.data);
+                    console.error("خطا در تایید callback_query:", error.response?.data);
                 }
             } else {
-                await sendMessage(chatId, 'عدد وارد شده نامعتبر است.');
+                await sendMessage(chatId, "عدد وارد شده نامعتبر است.");
             }
         }
 
@@ -212,25 +225,29 @@ app.post('/webhook', async (req, res) => {
     const chatId = update.message?.chat?.id;
     const text = update.message?.text;
 
-    if (text === '/start') {
-        let tutorialList = 'به مرکز آموزش مجازی مخابرات ایران خوش آمدید \n\n لیست آموزش ها: \n\n';
-        // tutorials.forEach((tutorial, index) => {
-        //     tutorialList += `${index + 1}. ${tutorial.title}\n`;
-        // });
-        // tutorialList += '\nبرای دریافت آموزش، عدد مربوطه را ارسال کنید.';
+    if (text === "/start") {
+        let tutorialList = "به مرکز آموزش مجازی مخابرات ایران خوش آمدید \n\n لیست آموزش ها: \n\n";
 
         // ایجاد دکمه‌های شیشه‌ای
         const replyMarkup = {
-            inline_keyboard: tutorials.map((tutorial, index) => [
-                {
-                    text: tutorial.title,
-                    callback_data: (index + 1).toString()
-                }
-            ])
+            inline_keyboard: [
+                ...tutorials.map((tutorial, index) => [
+                    {
+                        text: tutorial.title,
+                        callback_data: (index + 1).toString(),
+                    },
+                ]),
+                [
+                    {
+                        text: "مانده اعتبار",
+                        callback_data: "check_balance", // دکمه جدید
+                    },
+                ],
+            ],
         };
 
         await sendMessage(chatId, tutorialList, replyMarkup);
-    } else if (text === '/members') {
+    } else if (text === "/members") {
         // نمایش تعداد اعضا
         const members = loadMembers();
         const memberCount = members.length;
@@ -245,15 +262,15 @@ app.post('/webhook', async (req, res) => {
                 inline_keyboard: [
                     [
                         {
-                            text: 'بازگشت به منوی اصلی',
-                            callback_data: 'start'
-                        }
-                    ]
-                ]
+                            text: "بازگشت به منوی اصلی",
+                            callback_data: "start",
+                        },
+                    ],
+                ],
             };
             await sendMessage(chatId, tutorial.content, replyMarkup);
         } else {
-            await sendMessage(chatId, 'عدد وارد شده نامعتبر است.');
+            await sendMessage(chatId, "عدد وارد شده نامعتبر است.");
         }
     }
 
